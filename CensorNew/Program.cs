@@ -1,36 +1,43 @@
 ﻿using CensorNew;
-
-const string censorWord = "уточка";
-
-Console.WriteLine("specify the path to the directory");
-string Path = Console.ReadLine();
-List<string> Words = new List<string>()
+const string goodWord = "уточка";
+List<string> BadWords = new List<string>()
 {
     "бля",
     "хуй",
     "хуя",
     "ебан",
     "муд",
-    "ебу"
+    "ебу",
+    "ебал"
 };
 
+Console.Write("specify the path to the directory: ");
+string Path = Console.ReadLine();
 
-CensorWords(@"C:\Users\vladu\Desktop\Новая папка\файл для цензуры.txt");
+FileInfo fileInfo = new FileInfo(Path);
 
-void CensorWords(string path)
+if (fileInfo.Exists)
 {
-    Path = path;
-    DirectoryInfo directoryInfo = new DirectoryInfo(path);
- 
+    File.WriteAllText(fileInfo.DirectoryName + "\\CensorNext.txt", CensorWords(Path));
+}
+else
+{
+    Console.WriteLine("Not found");
+}
+
+
+
+string CensorWords(string path)
+{
     string censor = File.ReadAllText(path);
     
-    foreach (var word  in Words)
+    foreach (var word  in BadWords)
     {
-      censor =  censor.Replace(word.ToLower(), censorWord);
-      censor = censor.Replace(word.ToUpper(), censorWord);
-      censor = censor.Replace(word.ToUpperFirstChar(), censorWord);
+      censor =  censor.Replace(word.ToLower(), goodWord);
+      censor = censor.Replace(word.ToUpper(), goodWord);
+      censor = censor.Replace(word.ToUpperFirstChar(), goodWord);
     }
 
-    Console.WriteLine(censor);
+    return censor;
 }
 
